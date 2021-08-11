@@ -86,19 +86,6 @@ getDate (Artist _ _ _ date _) = date
 getFollowers :: Artist -> Followers
 getFollowers (Artist _ _ followers _ _) = followers
 
--- filters artist by date
-dateFilter :: String -> [Artist] -> [Artist]
-dateFilter date = filter ((=="17").getDate)
-
--- select 2017 numbers
-get2017List :: Artist -> Int
-get2017List (Artist _ _ _ _  yearly) = length(filter (\(a,_) -> a == "2017") yearly)
-
-getAvgRating :: [Artist] -> Float
-getAvgRating [] = 0
---getAvgRating rt = (realToFrac (sum (map snd rt)) / fromIntegral (length artListStr)) :: Float
-
-
 -- display all command
 displayAllArtist :: Int -> IO()
 displayAllArtist 0 = do
@@ -109,7 +96,7 @@ displayAllArtist 0 = do
    
 -- add artist demo
 addArtistTest 1 = do
-  let name = "Josh Gagnuss"
+  let name = "John Smith"
   let gender = "Male"
   let followers = 9100
   let date = "21-05-2021"
@@ -120,9 +107,7 @@ addArtistTest 1 = do
 
 testDates :: [Artist] -> [Artist]
 testDates [] = []
-testDates artistList=filter((=="2021-02-18") . getDate)artistList
-
-
+testDates artistList=filter((=="2017") . getDate) artistList
 
 -- Main Program Interface --
 dataFile = "data.txt"
