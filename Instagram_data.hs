@@ -109,6 +109,9 @@ testDates :: [Artist] -> [Artist]
 testDates [] = []
 testDates artistList=filter((=="2017") . getDate) artistList
 
+
+
+
 -- Main Program Interface --
 dataFile = "data.txt"
 main :: IO()
