@@ -73,10 +73,10 @@ addArtistTest 1 = do
 
 testDates :: [Artist] -> [Artist]
 testDates [] = []
-testDates artistList=filter((=="2021-02-18") . getDate) artistList
+testDates artistList=filter((=="2017") . getDate) artistList 
 
---dateFilter :: String -> [Artist] -> [Artist]
---dateFilter year db = [ (Artist name, gender, followers, date, yearly) | (Artist name, gender, followers, date, yearly) <- db, year == date]
+artistToString :: Artist -> String
+artistToString (Artist name gender followers date yearly) = ("Name: " ++ name ++ "\nGender: " ++ gender ++ "\nFollowers: " ++ (show followers) ++ "\nDate Updated: " ++ date ++ "\n")
 
 -- Main Program Interface --
 dataFile = "data.txt"
