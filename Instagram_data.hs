@@ -18,38 +18,48 @@ type YearlyFollowers = (String, Int)
 -- data type Artists
 data Artist = Artist ArtistName Gender Followers Date [YearlyFollowers] deriving (Eq, Show, Read)
 
--- add new Artist
+-- add new Artist -- function 1
 addArtist :: ArtistName -> Gender -> Followers -> Date -> [Artist] -> [Artist]
 addArtist name gender followers date artists = (Artist name gender followers date []) : artists
 
--- display artists as string
+-- display artists as string -- function 2
 artistString :: Artist -> String
 artistString all@(Artist name gender followers date yearly)
     = "Name: " ++ name ++ ", Gender: " ++ gender ++ ", Followers: " ++ show followers ++ ", Date: " ++ date ++ "\n" ++ "\n"
--- shorter version of artist string
+-- shorter version of artist string -- function 2
 artistShortString :: Artist -> String
 artistShortString all@(Artist name gender followers date yearly)
     = "Name: " ++ name ++ ", Followers: " ++ show followers ++  "\n" ++ "\n"
 
--- display all Artists as list
+-- display all Artists as list -- function 2
 artListStr :: [Artist] -> String
 artListStr = foldr (++) "\n" . map artistString
 
--- display all Artists as short string list
+-- display all Artists as short string list -- function 2
 artListShortStr :: [Artist] -> String
 artListShortStr = foldr (++) "\n" . map artistShortString
 
--- get name function for database duplicate comparison
+-- get name function for database duplicate comparison -- function 1 helper
 getName :: Artist -> ArtistName
 getName (Artist name _ _ _ _) = name
 
--- get date to show artist last updated on a certain date
+-- get date to show artist last updated on a certain date -- function 3 helper
 getDate :: Artist -> String
 getDate (Artist _ _ _ date _) = date
 
 -- get number of followers
 getFollowers :: Artist -> Followers
 getFollowers (Artist _ _ followers _ _) = followers
+
+-- filters artist by given year followers were updated
+testDates :: [Artist] -> [Artist]
+testDates [] = []
+testDates artistList=filter((=="2017") . getDate) artistList 
+
+artistToString :: Artist -> String
+artistToString (Artist name gender followers date yearly) = ("Name: " ++ name ++ "\nGender: " ++ gender ++ "\nFollowers: " ++ (show followers) ++ "\nDate Updated: " ++ date ++ "\n")
+
+-- DEMO FUNCTIONS --
 
 -- display all command
 displayAllArtist :: Int -> IO()
@@ -70,13 +80,17 @@ addArtistTest 1 = do
   putStrLn ""
   putStrLn $ artListStr $ addArtist name gender followers date testDatabase
 
+-- Function 3 filter artist by date 
+allArtistOnDate :: [Artist] -> String -> String
+allArtistOnDate [] targetYear = ""
+allArtistOnDate ((Artist name gender followers date yearly):xs) targetYear
+    | date == targetYear = ("Name: " ++ name ++
+                        "\nGender: " ++ gender ++
+                        "\nFollowers: " ++ (show followers) ++
+                        "\nDate: " ++ date ++ "\n") 
+                        ++ "\n \n" ++ allArtistOnDate xs targetYear
+    | otherwise = allArtistOnDate xs targetYear
 
-testDates :: [Artist] -> [Artist]
-testDates [] = []
-testDates artistList=filter((=="2017") . getDate) artistList 
-
-artistToString :: Artist -> String
-artistToString (Artist name gender followers date yearly) = ("Name: " ++ name ++ "\nGender: " ++ gender ++ "\nFollowers: " ++ (show followers) ++ "\nDate Updated: " ++ date ++ "\n")
 
 -- Main Program Interface --
 dataFile = "data.txt"
