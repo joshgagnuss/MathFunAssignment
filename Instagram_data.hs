@@ -89,7 +89,7 @@ allArtistOnDate ((Artist name gender followers date yearly):xs) targetDate
                         "\nFollowers: " ++ (show followers) ++
                         "\nDate: " ++ date ++ "\n") 
                         ++ "\n \n" ++ allArtistOnDate xs targetDate
-    | otherwise = allArtistOnDate xs targetYear
+    | otherwise = allArtistOnDate xs targetDate
 
 
 -- Main Program Interface --
@@ -153,8 +153,10 @@ menuList artList = do
 
      -- Show artist updated on specific date
     | option == "3" = do
-      putStrLn "Please enter the date you wish to search"
-	  
+      putStrLn "Please enter the date you wish to search: "
+      targetDate <- getLine
+      putStrLn ""
+      putStrLn $ allArtistOnDate 
       menuList ls
 
      -- Show end-of-year numbers for a specific artist
