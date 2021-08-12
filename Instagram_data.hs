@@ -82,13 +82,13 @@ addArtistTest 1 = do
 
 -- Function 3 filter artist by date 
 allArtistOnDate :: [Artist] -> String -> String
-allArtistOnDate [] targetYear = ""
-allArtistOnDate ((Artist name gender followers date yearly):xs) targetYear
-    | date == targetYear = ("Name: " ++ name ++
+allArtistOnDate [] targetDate = ""
+allArtistOnDate ((Artist name gender followers date yearly):xs) targetDate
+    | date == targetDate = ("Name: " ++ name ++
                         "\nGender: " ++ gender ++
                         "\nFollowers: " ++ (show followers) ++
                         "\nDate: " ++ date ++ "\n") 
-                        ++ "\n \n" ++ allArtistOnDate xs targetYear
+                        ++ "\n \n" ++ allArtistOnDate xs targetDate
     | otherwise = allArtistOnDate xs targetYear
 
 
@@ -154,6 +154,7 @@ menuList artList = do
      -- Show artist updated on specific date
     | option == "3" = do
       putStrLn "Please enter the date you wish to search"
+	  
       menuList ls
 
      -- Show end-of-year numbers for a specific artist
