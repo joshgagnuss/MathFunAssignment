@@ -112,7 +112,8 @@ getRating artist = (artist, calcAvg artist)
 demo :: Int -> IO ()
 -- demo 1 will add an artist to the testDatabase and then list the database with new artist included 
 demo 1 = putStrLn (artistAsString (addArtist "John Smith" "Male" 31000 "2021-02-18" testDatabase))
-
+-- demo 2 will list all the artist inside the database
+demo 2 = putStrLn (artistAsString testDatabase)
 
 
 
