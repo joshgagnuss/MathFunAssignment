@@ -22,12 +22,17 @@ data Artist = Artist ArtistName Gender Followers Date [YearlyFollowers] deriving
 -- helper functions
 -- used on conjunction with IO functions
 
+-- adds new artist to database
 addArtist :: String -> String -> Int -> String -> [Artist] -> [Artist]
 addArtist name gender followers date db = db ++ [Artist name gender followers date []]
 
 -- Produces list of artists as string
 artistAsString :: [Artist] -> String
 artistAsString db = foldr (++) [] (map formatArtistAsString db)
+
+-- helper funtion to check for artists name
+getName :: Artist -> ArtistName
+getName (Artist name _ _ _ _) = name
 
 -- formats Artist as a string
 formatArtistAsString :: Artist -> String
@@ -115,10 +120,121 @@ demo 1 = putStrLn (artistAsString (addArtist "John Smith" "Male" 31000 "2021-02-
 -- demo 2 will list all the artist inside the database
 demo 2 = putStrLn (artistAsString testDatabase)
 -- demo 3 will show all artists updated on a certain date
-demo 3 = putStrLn (listArtistByDateString "2017" testDatabase)
+demo 3 = putStrLn (listArtistByDateString "2021-02-18" testDatabase)
+-- demo 4 shows all artist who have recorded end of year numbers for 2017
+demo 4 = putStrLn ("Pending")
+-- demo 5 will give the average number of followers based on their last recorded numbers
+demo 5 = putStrLn ("Pending")
+-- demo 6 gives the name of the artists that have more followers then a specified number of followers in a certain year
+demo 6 = putStrLn ("Pending")
+-- demo 7 allows the administrator to record the end of year numbers of a certain artist
+demo 7 = putStrLn (artistAsString(addYearlyNumbers "Huang Biren" "2017" 35000 testDatabase))
+-- demo 8 will give all local artists who has an average following between two given values(inclusive), sorted in descending order on followers
+demo 8 = putStrLn ("Pending")
 
 
+-- Main Program Interface --
+dataFile = "data.txt"
+main :: IO()
+main = do
+  dtf <- readFile dataFile
+  menuList (read dtf :: [Artist])
+menuList :: [Artist] -> IO ()
+menuList artList = do
+  putStrLn ""
+  putStrLn ""
+  putStrLn "****************************************"
+  putStrLn "******************Menu******************"
+  putStrLn ""
+  putStrLn "1. Add New Artist to Database"
+  putStrLn "2. Display All Artist Saved to Database"
+  putStrLn "3. Show Artists Updated On A Specified Date (yyyy-mm-dd)"
+  putStrLn "4. Show Artist's with end-of-year data for 2017"
+  putStrLn "5. Current Average Number Of Followers Of All Artists"
+  putStrLn "6. Display Artist With More Followers Than Specified Number"
+  putStrLn "7. Update End-Of-Year Numbers Of A Specified Artist"
+  putStrLn "8. Display Artists Averages Between Two Numbers"
+  putStrLn "0. Exit Program"
+  putStrLn ""
+  putStrLn "****************************************"
+  putStrLn "****************************************"
+  putStrLn ""
+  putStrLn " Please Select A Menu Option: "
+  putStrLn ""
+  option <- getLine
+  putStrLn ""
+  try artList option where
+   try ls option
+     -- Add new artist
+    | option == "1" = do
+      putStr "Artist Name: "
+      name <- getLine
+      putStr "Gender: "
+      gender <- getLine
+      putStr "Followers: "
+      followers <- getLine
+      putStr "Date: "
+      date <- getLine
+     -- check for duplicates
+      if (filter ((==name) . getName) ls) == []
+       then do
+        putStrLn ("Artist:  " ++ name ++ "  has been saved to the database")
+        menuList (addArtist name gender (read followers :: Int) date ls)
+       else do
+        putStrLn ("\nArtist: " ++ name ++ " already exists in the database, please enter another name")
+        menuList ls
 
+     -- Display all artist in database 
+    | option == "2" = do
+      putStrLn ("\n**** Below are all artist currently listed in the database ****")
+      putStrLn ""
+      putStrLn $ artistAsString ls
+      putStrLn ""
+      menuList ls
+
+     -- Show artist updated on specific date
+    | option == "3" = do
+      putStrLn "Please enter the date you wish to search: "
+      date <- getLine
+      putStrLn ""
+      putStrLn (listArtistByDateString date ls)
+      putStrLn ""
+      menuList ls
+
+     -- Show end-of-year numbers for a specific artist
+    | option == "4" = do
+      putStrLn "Pending Completion" 
+
+     -- Current average number of followers across all artist
+    | option == "5" = do
+      putStrLn "Pending Completion"
+      menuList ls
+
+     -- display artist with more followers than specified input
+    | option == "6" = do
+      putStrLn "Pending Completion" 
+      menuList ls 
+
+     -- Updates end-of-year numbers on a specified artist
+    | option == "7" = do
+      putStrLn "Pending Completion"
+      menuList ls
+
+     -- display artist that have averages followers between two specified numbers
+    | option == "8" = do
+      putStrLn "Pending Completion"
+      menuList ls
+
+     -- Exit Program and save data 
+    | option == "0" = do
+      -- close the data.tzt
+      seq ls (return ())
+      -- write new data into data.txt
+      writeFile dataFile (show ls)
+      putStrLn "All data has been saved to database"
+      putStrLn ""
+      putStrLn "Bye Bye!"
+      putStrLn ""
 
 -- Test Data
 testDatabase :: [Artist]
