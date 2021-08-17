@@ -230,13 +230,11 @@ menuList artList = do
             then do
               putStr "Enter the number of followers the artist has: "
               followers <- getLine
-              if followers 
-                      then do
-                      putStrLn ("You saved" ++ name ++ "yearly following number" ++ show(followers))
-                      menuList (addYearlyNumbers name year (read followers :: Int) ls)
-                      else do
-                      putStrLn "Number was below 0, please enter the correct number of followers"
-			else do
+              putStr ""
+              putStrLn ("You saved " ++ name ++ " yearly following number " ++ show(followers))
+              menuList (addYearlyNumbers name year (read followers :: Int) ls)
+            else do
+             putStr "Artist does not exist in database"
              menuList ls
 
      -- display artist that have averages followers between two specified numbers
