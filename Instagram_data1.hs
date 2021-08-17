@@ -62,7 +62,7 @@ artistYearlyExists year followers
 -- shows artists with yearly numbers as string
 artistWithYearlyAsString :: String -> Artist -> String
 artistWithYearlyAsString year (Artist name _ _ _ yearly)
-    | artistYearlyExists year followers = name ++ ", " ++ show (snd (head [x | x <- followers, fst x == year])) ++ "\n"
+    | artistYearlyExists year yearly = name ++ ", " ++ show (snd (head [x | x <- yearly, fst x == year])) ++ "\n"
     | otherwise = ""
 
 -- checks if artist exists in the database 
