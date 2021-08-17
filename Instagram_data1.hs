@@ -77,7 +77,7 @@ artistByName name db = head (filter (\(Artist name _ _ _ _) -> name == name) db)
 
 -- creates new end of year numbers for artist
 newYearly :: Artist -> String -> Int -> Artist
-newYearly (Artist name gender followers date yearly) year yrfollowers = (Artist name gender followers date yearly ((filter (\(a,b) -> a /= year) followers) ++ [(year, followers)]))
+newYearly (Artist name gender followers date yearly) year yrfollowers = (Artist name gender followers date ((filter (\(a,b) -> a /= year) yearly) ++ [(year, yrfollowers)]))
 
 -- adds new end of year numbers for the artist to datatbase
 addYearlyNumbers :: String -> String -> Int -> [Artist] -> [Artist]
