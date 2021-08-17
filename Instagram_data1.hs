@@ -207,8 +207,8 @@ menuList artList = do
 
      -- Show end-of-year numbers for a specific artist
     | option == "4" = do
-      putStrLn "Pending Completion" 
-
+      putStrLn (yearlyAsString "2017" ls) 
+      menuList ls
      -- Current average number of followers across all artist
     | option == "5" = do
       putStrLn "Pending Completion"
