@@ -35,7 +35,7 @@ formatArtistAsString (Artist name gender followers date yearly ) = name ++ ", " 
 
 -- filters artist by date entered
 listArtistByDate :: String ->[Artist] -> [Artist]
-listArtistByDate date db = filter (\(Artist _ _ _ date _) -> date == date) db
+listArtistByDate date db = filter (\(Artist _ _ _ dt _) -> dt == date) db
 
 -- converts listArtistByDate to string
 listArtistByDateString :: String -> [Artist] -> String
@@ -114,6 +114,8 @@ demo :: Int -> IO ()
 demo 1 = putStrLn (artistAsString (addArtist "John Smith" "Male" 31000 "2021-02-18" testDatabase))
 -- demo 2 will list all the artist inside the database
 demo 2 = putStrLn (artistAsString testDatabase)
+-- demo 3 will show all artists updated on a certain date
+demo 3 = putStrLn (listArtistByDateString "2017" testDatabase)
 
 
 
