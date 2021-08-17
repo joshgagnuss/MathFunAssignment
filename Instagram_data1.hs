@@ -93,17 +93,16 @@ dateExists date db
 
 -- takes list sorted by date and lists as string
 sortedYearListAsString :: String -> String -> [Artist] -> String
-sortedYearListAsString dateB dateE db = artistAsString (sortFilmsByRating (listFilmsByYears dateB dateE db))
+sortedYearListAsString dateB dateE db = artistAsString (sortFilmsByRating (listArtistByYears dateB dateE db))
 
 -- filters artist by year entered 
 listArtistByYears :: String -> String -> [Artist] -> [Artist]
 listArtistByYears dateB dateE db = filter (\(Artist _ _ _ date _) -> date >= dateB && date <= dateE) db
 
+-- yet modify this function to suit 
 sortFilmsByRating :: [Artist] ->[Artist]
 sortFilmsByRating db = reverse (map fst (sortBy (compare `on` snd) (map getRating db)))
 
-
--- ************
 -- used to pass back a tuple used to sort films by rating
 getRating :: Artist -> (Artist, Float)
 getRating artist = (artist, calcAvg artist)
