@@ -42,44 +42,49 @@ listArtistByDate date db = filter (\(Artist _ _ _ date _) -> date == date) db
 listArtistByDateString :: String -> [Artist] -> String
 listArtistByDateString date db = artistAsString (listArtistByDate date db)
 
---**************************************
-averageRatingofList :: [Artist] -> Float
-averageRatingofList [] = 0
-averageRatingofList db = (sum (map calcFilmRating db)) / fromIntegral (length db)
+-- calculates the average followers of the artist list
+averageFollowersOfArtist :: [Artist] -> Float
+averageFollowersOfArtist [] = 0
+averageFollowersOfArtist db = (sum (map followers db)) / fromIntegral (length db)
 
-userRatingsAsString :: String -> [Film] -> String
-userRatingsAsString user db = foldr (++) [] (map (\film -> userRatingOfFilmAsString user film) db)
+-- checks for records of yearly numbers are present 
+artistYearlyExists :: String -> EndYear -> Bool
+artistYearlyExists year followers
+    | (filter (\(a,_) -> a == year) followers) == [] = False
+    | otherwise = True
 
-userRatingOfFilmAsString :: String -> Film -> String
-userRatingOfFilmAsString user (Film title _ _ ratings)
-    | userRatingExists user ratings = title ++ ", " ++ show (snd (head [x | x <- ratings, fst x == user])) ++ "\n"
+-- shows artists with yearly numbers as string
+artistWithYearlyAsString :: String -> Artist -> String
+artistWithYearlyAsString year (Artist name _ _ _ yearly)
+    | artistYearlyExists year followers = name ++ ", " ++ show (snd (head [x | x <- follows, fst x == year])) ++ "\n"
     | otherwise = ""
 
-userRatingExists :: String -> Ratings -> Bool
-userRatingExists user ratings
-    | (filter (\(a,_) -> a == user) ratings) == [] = False
+-- checks if artist exists in the database 
+artistExists :: String -> [Artist] -> Bool
+artistExists name db
+    | (filter (\(Artist name _ _ _ _) -> name == name) db) == [] = False
     | otherwise = True
 
-addUserRating :: String -> String -> Int -> [Film] -> [Film]
-addUserRating title user review db
-    | not (filmExists title db) = db
-    | otherwise = (filter (\(Film ftitle _ _ _) -> ftitle /= title) db) ++ [newRating (filmByTitle title db) user review]
+-- filters artist by name 
+artistByName :: String -> [Artist] -> Artist
+artistByName name db = head (filter (\(Artist name _ _ _ _) -> name == name) db)
 
-newRating :: Film -> String -> Int -> Film
-newRating (Film ftitle fdir fyr ratings) user review = (Film ftitle fdir fyr ((filter (\(a,b) -> a /= user) ratings) ++ [(user, review)]))
+-- creates new end of year numbers for artist
+newYearly :: Artist -> String -> Int -> Artist
+newYearly (Artist name gender followers date yearly) year followers = (Artist name gender followers date yearly ((filter (\(a,b) -> a /= year) followers) ++ [(year, followers)]))
 
-filmByTitle :: String -> [Film] -> Film
-filmByTitle title db = head (filter (\(Film ftitle _ _ _) -> ftitle == title) db)
+-- adds new end of year numbers for the artist to datatbase
+addYearlyNumbers :: String -> String -> Int -> [Artist] -> [Artist]
+addYearlyNumbers name year followers db
+    | not (artistExists name db) = db
+    | otherwise = (filter (\(Artist name _ _ _ _) -> name /= name) db) ++ [newYearly (artistByName name db) year followers]
 
-filmExists :: String -> [Film] -> Bool
-filmExists title db
-    | (filter (\(Film ftitle _ _ _) -> ftitle == title) db) == [] = False
+-- checks database to match artist with given date
+dateExists :: String -> [Artist] -> Bool
+dateExists date db
+    | (filter (\(Artist _ _ _ date _) -> date == date) db) == [] = False
     | otherwise = True
 
-directorExists :: String -> [Film] -> Bool
-directorExists director db
-    | (filter (\(Film _ fdirector _ _) -> fdirector == director) db) == [] = False
-    | otherwise = True
 
 sortedYearListAsString :: Int -> Int -> [Film] -> String
 sortedYearListAsString yrB yrE db = filmsAsString (sortFilmsByRating (listFilmsByYears yrB yrE db))
@@ -87,11 +92,13 @@ sortedYearListAsString yrB yrE db = filmsAsString (sortFilmsByRating (listFilmsB
 sortFilmsByRating :: [Film] ->[Film]
 sortFilmsByRating db = reverse (map fst (sortBy (compare `on` snd) (map getRating db)))
 
+
+--***********************************************************
 -- used to pass back a tuple used to sort films by rating
-getRating :: Film -> (Film, Float)
+getRating :: Artist -> (Artist, Float)
 getRating film = (film, calcFilmRating film)
 
-listFilmsByYears :: Int -> Int -> [Film] -> [Film]
+listFilmsByYears :: Int -> Int -> [Artist] -> [Artist]
 listFilmsByYears yrB yrE db = filter (\(Film _ _ yr _) -> yr >= yrB && yr <= yrE) db
 
 
