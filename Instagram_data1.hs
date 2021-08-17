@@ -22,7 +22,6 @@ data Artist = Artist ArtistName Gender Followers Date [YearlyFollowers] deriving
 -- helper functions
 -- used on conjunction with IO functions
 
--- Functional Helpers 
 addArtist :: String -> String -> Int -> String [Artist] -> [Artist]
 addArtist name gender followers date db = db ++ [Artist name gender followers date []]
 
@@ -85,15 +84,15 @@ dateExists date db
     | (filter (\(Artist _ _ _ date _) -> date == date) db) == [] = False
     | otherwise = True
 
+-- ******************************************************
+sortedYearListAsString :: Int -> Int -> [Artist] -> String
+sortedYearListAsString yrB yrE db = artistAsString (sortFilmsByRating (listFilmsByYears yrB yrE db))
 
-sortedYearListAsString :: Int -> Int -> [Film] -> String
-sortedYearListAsString yrB yrE db = filmsAsString (sortFilmsByRating (listFilmsByYears yrB yrE db))
-
-sortFilmsByRating :: [Film] ->[Film]
+sortFilmsByRating :: [Artist] ->[Artist]
 sortFilmsByRating db = reverse (map fst (sortBy (compare `on` snd) (map getRating db)))
 
 
---***********************************************************
+-- ************
 -- used to pass back a tuple used to sort films by rating
 getRating :: Artist -> (Artist, Float)
 getRating film = (film, calcFilmRating film)
