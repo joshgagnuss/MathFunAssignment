@@ -119,6 +119,7 @@ demo 3 = putStrLn (listArtistByDateString "2017" testDatabase)
 
 
 
+
 -- Test Data
 testDatabase :: [Artist]
 testDatabase = 
