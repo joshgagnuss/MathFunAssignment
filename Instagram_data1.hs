@@ -22,7 +22,7 @@ data Artist = Artist ArtistName Gender Followers Date [YearlyFollowers] deriving
 -- helper functions
 -- used on conjunction with IO functions
 
-addArtist :: String -> String -> Int -> String [Artist] -> [Artist]
+addArtist :: String -> String -> Int -> String -> [Artist] -> [Artist]
 addArtist name gender followers date db = db ++ [Artist name gender followers date []]
 
 -- Produces list of artists as string
@@ -31,7 +31,7 @@ artistAsString db = foldr (++) [] (map formatArtistAsString db)
 
 -- formats Artist as a string
 formatArtistAsString :: Artist -> String
-formatArtistAsString (Artist namae gender followers date yearly ) = name ++ ", " ++ gender ++ ", " ++ show followers ++ ", " ++ date ++"\n"
+formatArtistAsString (Artist name gender followers date yearly ) = name ++ ", " ++ gender ++ ", " ++ show followers ++ ", " ++ date ++"\n"
 
 -- filters artist by date entered
 listArtistByDate :: String ->[Artist] -> [Artist]
@@ -41,10 +41,17 @@ listArtistByDate date db = filter (\(Artist _ _ _ date _) -> date == date) db
 listArtistByDateString :: String -> [Artist] -> String
 listArtistByDateString date db = artistAsString (listArtistByDate date db)
 
+calcAvg :: Artist -> Float
+calcAvg (Artist _ _ _ _ yearly) = calcAvg1 yearly
+
+calcAvg1 :: [YearlyFollowers] -> Float
+calcAvg1 [] = 0
+calcAvg1 yearly = fromIntegral (sum (map snd yearly)) / fromIntegral (length yearly)
+
 -- calculates the average followers of the artist list
 averageFollowersOfArtist :: [Artist] -> Float
 averageFollowersOfArtist [] = 0
-averageFollowersOfArtist db = (sum (map followers db)) / fromIntegral (length db)
+averageFollowersOfArtist db = (sum (map calcAvg db)) / fromIntegral (length db)
 
 -- checks for records of yearly numbers are present 
 artistYearlyExists :: String -> EndYear -> Bool
@@ -55,7 +62,7 @@ artistYearlyExists year followers
 -- shows artists with yearly numbers as string
 artistWithYearlyAsString :: String -> Artist -> String
 artistWithYearlyAsString year (Artist name _ _ _ yearly)
-    | artistYearlyExists year followers = name ++ ", " ++ show (snd (head [x | x <- follows, fst x == year])) ++ "\n"
+    | artistYearlyExists year followers = name ++ ", " ++ show (snd (head [x | x <- followers, fst x == year])) ++ "\n"
     | otherwise = ""
 
 -- checks if artist exists in the database 
@@ -70,7 +77,7 @@ artistByName name db = head (filter (\(Artist name _ _ _ _) -> name == name) db)
 
 -- creates new end of year numbers for artist
 newYearly :: Artist -> String -> Int -> Artist
-newYearly (Artist name gender followers date yearly) year followers = (Artist name gender followers date yearly ((filter (\(a,b) -> a /= year) followers) ++ [(year, followers)]))
+newYearly (Artist name gender followers date yearly) year yrfollowers = (Artist name gender followers date yearly ((filter (\(a,b) -> a /= year) followers) ++ [(year, followers)]))
 
 -- adds new end of year numbers for the artist to datatbase
 addYearlyNumbers :: String -> String -> Int -> [Artist] -> [Artist]
@@ -98,7 +105,7 @@ getRating :: Artist -> (Artist, Float)
 getRating film = (film, calcFilmRating film)
 
 listFilmsByYears :: Int -> Int -> [Artist] -> [Artist]
-listFilmsByYears yrB yrE db = filter (\(Film _ _ yr _) -> yr >= yrB && yr <= yrE) db
+listFilmsByYears yrB yrE db = filter (\(Artist _ _ yr _) -> yr >= yrB && yr <= yrE) db
 
 
 
