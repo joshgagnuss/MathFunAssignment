@@ -13,7 +13,10 @@ type ArtistName = String
 type Gender = String
 type Followers = Int
 type Date = String
-type YearlyFollowers = (String, Int)
+type YearlyFollowers = (String, Int
+
+-- helper functions
+-- used on conjunction with IO functions
 
 -- data type Artists
 data Artist = Artist ArtistName Gender Followers Date [YearlyFollowers] deriving (Eq, Show, Read)
@@ -60,6 +63,7 @@ artistToString :: Artist -> String
 artistToString (Artist name gender followers date yearly) = ("Name: " ++ name ++ "\nGender: " ++ gender ++ "\nFollowers: " ++ (show followers) ++ "\nDate Updated: " ++ date ++ "\n")
 
 -- DEMO FUNCTIONS --
+-- used to display the functionality on test database
 
 -- display all command
 displayAllArtist :: Int -> IO()
@@ -156,7 +160,8 @@ menuList artList = do
       putStrLn "Please enter the date you wish to search: "
       targetDate <- getLine
       putStrLn ""
-      putStrLn $ allArtistOnDate 
+      putStrLn $ allArtistOnDate
+      putStrLn ""
       menuList ls
 
      -- Show end-of-year numbers for a specific artist
