@@ -19,6 +19,7 @@ type EndYear = [YearlyFollowers]
 -- data type Artists
 data Artist = Artist ArtistName Gender Followers Date [YearlyFollowers] deriving (Eq, Show, Read)
 
+
 -- helper functions
 -- used on conjunction with IO functions
 
@@ -221,8 +222,22 @@ menuList artList = do
 
      -- Updates end-of-year numbers on a specified artist
     | option == "7" = do
-      putStrLn "Pending Completion"
-      menuList ls
+      putStrLn "Please enter the artist you wish to update: "
+      name <- getLine
+      putStrLn "Please enter the year you would to add: "
+      year <- getLine
+      if (artistExists name ls)
+            then do
+              putStr "Enter the number of followers the artist has: "
+              followers <- getLine
+              if followers 
+                      then do
+                      putStrLn ("You saved" ++ name ++ "yearly following number" ++ show(followers))
+                      menuList (addYearlyNumbers name year (read followers :: Int) ls)
+                      else do
+                      putStrLn "Number was below 0, please enter the correct number of followers"
+			else do
+             menuList ls
 
      -- display artist that have averages followers between two specified numbers
     | option == "8" = do
