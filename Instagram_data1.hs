@@ -91,9 +91,13 @@ dateExists date db
     | (filter (\(Artist _ _ _ date _) -> date == date) db) == [] = False
     | otherwise = True
 
--- ******************************************************
-sortedYearListAsString :: Int -> Int -> [Artist] -> String
-sortedYearListAsString yrB yrE db = artistAsString (sortFilmsByRating (listFilmsByYears yrB yrE db))
+-- takes list sorted by date and lists as string
+sortedYearListAsString :: String -> String -> [Artist] -> String
+sortedYearListAsString dateB dateE db = artistAsString (sortFilmsByRating (listFilmsByYears dateB dateE db))
+
+-- filters artist by year entered 
+listArtistByYears :: String -> String -> [Artist] -> [Artist]
+listArtistByYears dateB dateE db = filter (\(Artist _ _ _ date _) -> date >= dateB && date <= dateE) db
 
 sortFilmsByRating :: [Artist] ->[Artist]
 sortFilmsByRating db = reverse (map fst (sortBy (compare `on` snd) (map getRating db)))
@@ -104,8 +108,7 @@ sortFilmsByRating db = reverse (map fst (sortBy (compare `on` snd) (map getRatin
 getRating :: Artist -> (Artist, Float)
 getRating artist = (artist, calcAvg artist)
 
-listFilmsByYears :: Int -> Int -> [Artist] -> [Artist]
-listFilmsByYears yrB yrE db = filter (\(Artist _ _ yr _) -> yr >= yrB && yr <= yrE) db
+
 
 
 
