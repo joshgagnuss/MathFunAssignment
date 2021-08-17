@@ -102,7 +102,7 @@ sortFilmsByRating db = reverse (map fst (sortBy (compare `on` snd) (map getRatin
 -- ************
 -- used to pass back a tuple used to sort films by rating
 getRating :: Artist -> (Artist, Float)
-getRating film = (film, calcFilmRating film)
+getRating artist = (artist, calcAvg artist)
 
 listFilmsByYears :: Int -> Int -> [Artist] -> [Artist]
 listFilmsByYears yrB yrE db = filter (\(Artist _ _ yr _) -> yr >= yrB && yr <= yrE) db
