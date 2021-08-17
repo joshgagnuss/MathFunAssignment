@@ -229,7 +229,9 @@ menuList artList = do
 
      -- display artist with more followers than specified input
     | option == "6" = do
-      putStrLn "Pending Completion" 
+      putStrLn "Below are all artist above 60,000 followers"
+      putStrLn ""
+      putStrLn (artistAbove1000AsString ls)
       menuList ls 
 
      -- Updates end-of-year numbers on a specified artist
