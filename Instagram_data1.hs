@@ -70,6 +70,10 @@ artistWithYearlyAsString year (Artist name _ _ _ yearly)
     | artistYearlyExists year yearly = name ++ ", " ++ show (snd (head [x | x <- yearly, fst x == year])) ++ "\n"
     | otherwise = ""
 
+-- prints the artist and yearly as a string
+yearlyAsString :: String -> [Artist] -> String
+yearlyAsString year db = foldr (++) [] (map (\artist -> artistWithYearlyAsString year artist) db)
+
 -- checks if artist exists in the database 
 artistExists :: String -> [Artist] -> Bool
 artistExists name db
@@ -122,7 +126,7 @@ demo 2 = putStrLn (artistAsString testDatabase)
 -- demo 3 will show all artists updated on a certain date
 demo 3 = putStrLn (listArtistByDateString "2021-02-18" testDatabase)
 -- demo 4 shows all artist who have recorded end of year numbers for 2017
-demo 4 = putStrLn ("Pending")
+demo 4 = putStrLn (yearlyAsString "2017" testDatabase)
 -- demo 5 will give the average number of followers based on their last recorded numbers
 demo 5 = putStrLn ("Pending")
 -- demo 6 gives the name of the artists that have more followers then a specified number of followers in a certain year
