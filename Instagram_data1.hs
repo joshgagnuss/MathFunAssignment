@@ -137,6 +137,7 @@ artistByFollowingAsString f db = artistAsString (listArtistByFollowers f db)
 getAverage :: Artist -> (Artist, Float)
 getAverage artist = (artist, calcAvg artist)
 
+--sorts a list of artist by average
 sortArtistByAverage :: [Artist] -> [Artist]
 sortArtistByAverage db = reverse (map fst (sortBy (compare `on` snd) (map getAverage db)))
 
@@ -144,6 +145,7 @@ sortArtistByAverage db = reverse (map fst (sortBy (compare `on` snd) (map getAve
 listArtistByAverage :: Float -> Float -> [Artist] -> [Artist]
 listArtistByAverage fa fb db = filter (\(Artist _ _ _ _ yearly) -> calcAvg1 yearly >= fa && calcAvg1 yearly <= fb) db
 
+-- maps sorted by average to string
 sortedByAverageString :: Float -> Float -> [Artist] -> String
 sortedByAverageString fa fb db = avgAsString (sortArtistByAverage (listArtistByAverage fa fb db))
 
@@ -270,8 +272,29 @@ menuList artList = do
 
      -- display artist that have averages followers between two specified numbers
     | option == "8" = do
-      putStrLn "Pending Completion"
-      menuList ls
+      putStrLn "Please enter the lower boundary of the filter: "
+      fa <- getLine
+      putStrLn "Please enter the upper boundary of the filter: "
+      fb <- getLine
+      if (read fa :: Float) >= 0 && (read fb :: Float) >= 0
+            then do
+               if (read fa :: Float) <= (read fb :: Float)
+                    then  do
+                       if (sortedByAverageString (read fa :: Float) (read fb :: Float) ls) /= ""
+                            then do
+                             putStr "\n List of artists with averages between: "
+                             putStrLn (show(fa) ++ " and " ++ show(fb) ++ "\n")
+                             putStr (sortedByAverageString (read fa :: Float) (read fb :: Float) ls)
+                             putStrLn ""
+                             putStrLn ""
+                            else do
+                             putStrLn "No artists have averages between these numbers"
+                    else do
+                     putStrLn "Upper boundary must be greater then lower boundary"
+                     menuList ls
+            else do
+                 putStrLn "Numbers were invalid"
+                 menuList ls
 
      -- Exit Program and save data 
     | option == "0" = do
