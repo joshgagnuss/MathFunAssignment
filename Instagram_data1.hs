@@ -37,7 +37,7 @@ getName (Artist name _ _ _ _) = name
 
 -- formats Artist as a string
 formatArtistAsString :: Artist -> String
-formatArtistAsString (Artist name gender followers date yearly ) = name ++ ", " ++ gender ++ ", " ++ show followers ++ ", " ++ date ++"\n"
+formatArtistAsString (Artist name gender followers date yearly ) = "Name: " ++ name ++ ", Gender: " ++ gender ++ ", Followers: " ++ show followers ++ ", Date Updated: " ++ date ++"\n"
 
 -- filters artist by date entered
 listArtistByDate :: String ->[Artist] -> [Artist]
@@ -56,6 +56,7 @@ calcAvg1 :: [YearlyFollowers] -> Float
 calcAvg1 [] = 0
 calcAvg1 yearly = fromIntegral (sum (map snd yearly)) / fromIntegral (length yearly)
 
+-- calculates average followers of individual artists 
 getAvgFollowers :: [YearlyFollowers] -> Float
 getAvgFollowers [] = 0
 getAvgFollowers fl = (realToFrac (sum (map snd fl)) / fromIntegral (length fl)) :: Float
@@ -65,7 +66,7 @@ artistAvgStr :: Artist -> String
 artistAvgStr all@(Artist name _ _ _ yearly)
    = "Name: " ++ name ++ ", Average Followers: " ++ printf"%.2g \n"(getAvgFollowers yearly)
 
-
+-- maps filtered averages to string
 avgAsString :: [Artist] -> String
 avgAsString db = foldr (++) [] (map artistAvgStr db)
 
@@ -116,21 +117,9 @@ dateExists date db
     | (filter (\(Artist _ _ _ date _) -> date == date) db) == [] = False
     | otherwise = True
 
--- takes list sorted by date and lists as string
-sortedYearListAsString :: String -> String -> [Artist] -> String
-sortedYearListAsString dateB dateE db = artistAsString (sortFilmsByRating (listArtistByYears dateB dateE db))
-
 -- filters artist by year entered 
 listArtistByYears :: String -> String -> [Artist] -> [Artist]
 listArtistByYears dateB dateE db = filter (\(Artist _ _ _ date _) -> date >= dateB && date <= dateE) db
-
--- yet modify this function to suit 
-sortFilmsByRating :: [Artist] ->[Artist]
-sortFilmsByRating db = reverse (map fst (sortBy (compare `on` snd) (map getRating db)))
-
--- yet modify this function to suit
-getRating :: Artist -> (Artist, Float)
-getRating film = (film, calcAvg film)
 
 --filters artist above a number entered
 listArtistByFollowers :: Float -> [Artist] -> [Artist]
@@ -226,7 +215,7 @@ menuList artList = do
 
      -- Show artist updated on specific date
     | option == "3" = do
-      putStrLn "Please enter the date you wish to search: "
+      putStrLn "Please enter the date you wish to search (yyyy-mm-dd): "
       date <- getLine
       putStrLn ""
       putStrLn (listArtistByDateString date ls)
