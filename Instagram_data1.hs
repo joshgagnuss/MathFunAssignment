@@ -156,7 +156,7 @@ demo 3 = putStrLn (listArtistByDateString "2021-02-18" testDatabase)
 -- demo 4 shows all artist who have recorded end of year numbers for 2017
 demo 4 = putStrLn (yearlyAsString "2017" testDatabase)
 -- demo 5 will give the average number of followers based on their last recorded numbers
-demo 5 = putStr (avgAsString testDatabase)
+demo 5 = putStrLn (avgAsString testDatabase)
 -- demo 6 gives the name of the artists that have more followers then a specified number of followers in a certain year
 demo 6 = putStrLn (artistAbove1000AsString testDatabase)
 -- demo 7 allows the administrator to record the end of year numbers of a certain artist
@@ -239,7 +239,7 @@ menuList artList = do
       menuList ls
      -- Current average number of followers across all artist
     | option == "5" = do
-      putStrLn "Pending Completion"
+      putStrLn (avgAsString ls)
       menuList ls
 
      -- display artist with more followers than specified input
