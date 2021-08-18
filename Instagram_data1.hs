@@ -126,8 +126,8 @@ listArtistByFollowers :: Float -> [Artist] -> [Artist]
 listArtistByFollowers f db = filter (\(Artist _ _ _ _ yearly) -> calcAvg1 yearly >= f) db
 
 -- filters artist for demo function 6
-artistAbove1000AsString :: [Artist] -> String
-artistAbove1000AsString db = artistByFollowingAsString 60000.0 db
+artistAbove1000AsString :: Float -> [Artist] -> String
+artistAbove1000AsString f db = artistByFollowingAsString f db
 
 -- list artist filtered by followersrs
 artistByFollowingAsString :: Float -> [Artist] -> String
@@ -162,7 +162,7 @@ demo 4 = putStrLn (yearlyAsString "2017" testDatabase)
 -- demo 5 will give the average number of followers based on their last recorded numbers
 demo 5 = putStrLn (avgAsString testDatabase)
 -- demo 6 gives the name of the artists that have more followers then a specified number of followers in a certain year
-demo 6 = putStrLn (artistAbove1000AsString testDatabase)
+demo 6 = putStrLn (artistAbove1000AsString 60000 testDatabase)
 -- demo 7 allows the administrator to record the end of year numbers of a certain artist
 demo 7 = putStrLn (artistAsString(addYearlyNumbers "Huang Biren" "2017" 35000 testDatabase))
 -- demo 8 will give all local artists who has an average following between two given values(inclusive), sorted in descending order on followers
@@ -248,9 +248,10 @@ menuList artList = do
 
      -- display artist with more followers than specified input
     | option == "6" = do
-      putStrLn "Below are all artist above 60,000 followers"
+      putStrLn "please enter the number of followers you would like to filter: "
+      f <- getLine
       putStrLn ""
-      putStrLn (artistAbove1000AsString ls)
+      putStrLn (artistAbove1000AsString (read f :: Float) ls)
       menuList ls 
 
      -- Updates end-of-year numbers on a specified artist
