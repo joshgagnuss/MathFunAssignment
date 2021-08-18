@@ -47,12 +47,27 @@ listArtistByDate date db = filter (\(Artist _ _ _ dt _) -> dt == date) db
 listArtistByDateString :: String -> [Artist] -> String
 listArtistByDateString date db = artistAsString (listArtistByDate date db)
 
+-- calculates average following
 calcAvg :: Artist -> Float
 calcAvg (Artist _ _ _ _ yearly) = calcAvg1 yearly
 
+-- calculates the average following of artist
 calcAvg1 :: [YearlyFollowers] -> Float
 calcAvg1 [] = 0
 calcAvg1 yearly = fromIntegral (sum (map snd yearly)) / fromIntegral (length yearly)
+
+getAvgFollowers :: [YearlyFollowers] -> Float
+getAvgFollowers [] = 0
+getAvgFollowers fl = (realToFrac (sum (map snd fl)) / fromIntegral (length fl)) :: Float
+
+-- gets the average following of artist and prints to string
+artistAvgStr :: Artist -> String
+artistAvgStr all@(Artist name _ _ _ yearly)
+   = "Name: " ++ name ++ ", Average Followers: " ++ printf"%.2g \n"(getAvgFollowers yearly)
+
+
+avgAsString :: [Artist] -> String
+avgAsString db = foldr (++) [] (map artistAvgStr db)
 
 -- calculates the average followers of the artist list
 averageFollowersOfArtist :: [Artist] -> Float
@@ -113,9 +128,9 @@ listArtistByYears dateB dateE db = filter (\(Artist _ _ _ date _) -> date >= dat
 sortFilmsByRating :: [Artist] ->[Artist]
 sortFilmsByRating db = reverse (map fst (sortBy (compare `on` snd) (map getRating db)))
 
--- used to pass back a tuple used to sort films by rating
+-- yet modify this function to suit
 getRating :: Artist -> (Artist, Float)
-getRating artist = (artist, calcAvg artist)
+getRating film = (film, calcAvg film)
 
 --filters artist above a number entered
 listArtistByFollowers :: Float -> [Artist] -> [Artist]
@@ -125,7 +140,7 @@ listArtistByFollowers f db = filter (\(Artist _ _ _ _ yearly) -> calcAvg1 yearly
 artistAbove1000AsString :: [Artist] -> String
 artistAbove1000AsString db = artistByFollowingAsString 60000.0 db
 
--- list artist filtered by follers
+-- list artist filtered by followersrs
 artistByFollowingAsString :: Float -> [Artist] -> String
 artistByFollowingAsString f db = artistAsString (listArtistByFollowers f db)
 
@@ -141,7 +156,7 @@ demo 3 = putStrLn (listArtistByDateString "2021-02-18" testDatabase)
 -- demo 4 shows all artist who have recorded end of year numbers for 2017
 demo 4 = putStrLn (yearlyAsString "2017" testDatabase)
 -- demo 5 will give the average number of followers based on their last recorded numbers
-demo 5 = putStrLn ("Pending")
+demo 5 = putStr (avgAsString testDatabase)
 -- demo 6 gives the name of the artists that have more followers then a specified number of followers in a certain year
 demo 6 = putStrLn (artistAbove1000AsString testDatabase)
 -- demo 7 allows the administrator to record the end of year numbers of a certain artist
