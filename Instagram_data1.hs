@@ -133,6 +133,19 @@ artistAbove1000AsString db = artistByFollowingAsString 60000.0 db
 artistByFollowingAsString :: Float -> [Artist] -> String
 artistByFollowingAsString f db = artistAsString (listArtistByFollowers f db)
 
+-- helper function to return a tuple to sort in descending order
+getAverage :: Artist -> (Artist, Float)
+getAverage artist = (artist, calcAvg artist)
+
+sortArtistByAverage :: [Artist] -> [Artist]
+sortArtistByAverage db = reverse (map fst (sortBy (compare `on` snd) (map getAverage db)))
+
+--filters artist above a number entered
+listArtistByAverage :: Float -> Float -> [Artist] -> [Artist]
+listArtistByAverage fa fb db = filter (\(Artist _ _ _ _ yearly) -> calcAvg1 yearly >= fa && calcAvg1 yearly <= fb) db
+
+sortedByAverageString :: Float -> Float -> [Artist] -> String
+sortedByAverageString fa fb db = avgAsString (sortArtistByAverage (listArtistByAverage fa fb db))
 
 -- demo functions to display each function working using testDatabase
 demo :: Int -> IO ()
@@ -151,7 +164,7 @@ demo 6 = putStrLn (artistAbove1000AsString testDatabase)
 -- demo 7 allows the administrator to record the end of year numbers of a certain artist
 demo 7 = putStrLn (artistAsString(addYearlyNumbers "Huang Biren" "2017" 35000 testDatabase))
 -- demo 8 will give all local artists who has an average following between two given values(inclusive), sorted in descending order on followers
-demo 8 = putStrLn ("Pending")
+demo 8 = putStrLn (sortedByAverageString 30000 60000 testDatabase)
 
 
 -- Main Program Interface --
