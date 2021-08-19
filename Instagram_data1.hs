@@ -288,6 +288,7 @@ menuList artList = do
                              putStr (sortedByAverageString (read fa :: Float) (read fb :: Float) ls)
                              putStrLn ""
                              putStrLn ""
+                             menuList ls 
                             else do
                              putStrLn "No artists have averages between these numbers"
                     else do
