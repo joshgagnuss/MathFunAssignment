@@ -84,7 +84,7 @@ artistYearlyExists year followers
 -- shows artists with yearly numbers as string
 artistWithYearlyAsString :: String -> Artist -> String
 artistWithYearlyAsString year (Artist name _ _ _ yearly)
-    | artistYearlyExists year yearly = name ++ ", " ++ show (snd (head [x | x <- yearly, fst x == year])) ++ "\n"
+    | artistYearlyExists year yearly = "Name: " ++ name ++ ", 2017 Followers: " ++ show (snd (head [x | x <- yearly, fst x == year])) ++ "\n"
     | otherwise = ""
 
 -- prints the artist and yearly as a string
@@ -99,7 +99,7 @@ artistExists name db
 
 -- filters artist by name 
 artistByName :: String -> [Artist] -> Artist
-artistByName name db = head (filter (\(Artist name _ _ _ _) -> name == name) db)
+artistByName name db = head (filter (\(Artist yname _ _ _ _) -> yname == name) db)
 
 -- creates new end of year numbers for artist
 newYearly :: Artist -> String -> Int -> Artist
@@ -109,7 +109,7 @@ newYearly (Artist name gender followers date yearly) year yrfollowers = (Artist 
 addYearlyNumbers :: String -> String -> Int -> [Artist] -> [Artist]
 addYearlyNumbers name year followers db
     | not (artistExists name db) = db
-    | otherwise = (filter (\(Artist name _ _ _ _) -> name /= name) db) ++ [newYearly (artistByName name db) year followers]
+    | otherwise = (filter (\(Artist yname _ _ _ _) -> yname /= name) db) ++ [newYearly (artistByName name db) year followers]
 
 -- checks database to match artist with given date
 dateExists :: String -> [Artist] -> Bool
@@ -209,7 +209,7 @@ menuList artList = do
       gender <- getLine
       putStr "Followers: "
       followers <- getLine
-      putStr "Date: "
+      putStr "Date (yyyy-mm-dd): "
       date <- getLine
      -- check for duplicates
       if (filter ((==name) . getName) ls) == []
@@ -258,7 +258,7 @@ menuList artList = do
     | option == "7" = do
       putStrLn "Please enter the artist you wish to update: "
       name <- getLine
-      putStrLn "Please enter the year you would to add: "
+      putStrLn "Please enter the year you would to add (yyyy): "
       year <- getLine
       if (artistExists name ls)
             then do
