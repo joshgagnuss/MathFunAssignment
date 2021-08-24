@@ -125,13 +125,13 @@ listArtistByYears dateB dateE db = filter (\(Artist _ _ _ date _) -> date >= dat
 listArtistByFollowers :: Float -> [Artist] -> [Artist]
 listArtistByFollowers f db = filter (\(Artist _ _ _ _ yearly) -> calcAvg1 yearly >= f) db
 
--- filters artist for demo function 6
-artistAbove1000AsString :: Float -> [Artist] -> String
-artistAbove1000AsString f db = artistByFollowingAsString f db
-
 -- list artist filtered by followersrs
 artistByFollowingAsString :: Float -> [Artist] -> String
 artistByFollowingAsString f db = artistAsString (listArtistByFollowers f db)
+
+-- filters artist for demo function 6
+artistAbove1000AsString :: Float -> [Artist] -> String
+artistAbove1000AsString f db = artistByFollowingAsString f db
 
 -- helper function to return a tuple to sort in descending order
 getAverage :: Artist -> (Artist, Float)
