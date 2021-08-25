@@ -265,7 +265,7 @@ menuList artList = do
               putStr "Enter the number of followers the artist has: "
               followers <- getLine
               putStr ""
-              putStrLn ("You saved " ++ name ++ " yearly following number " ++ show(followers))
+              putStrLn ("You saved " ++ name ++ "'s yearly following number: " ++ show(followers) ++ " for the year of: " ++ year)
               menuList (addYearlyNumbers name year (read followers :: Int) ls)
             else do
              putStr "Artist does not exist in database"
