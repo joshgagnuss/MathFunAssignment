@@ -1,7 +1,7 @@
 # MathFunAssignment
-Haskell Database Sofwtare
+Haskell Database Management 
 
-simple haskell databse software to manage data of local artists instagram accounts
+simple haskell program to manage data of local instagram account details 
 
 open the program
 
